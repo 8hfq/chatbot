@@ -90,9 +90,12 @@ class Seq2SeqModel(object):
       def sampled_loss(labels,logits):
         labels = tf.reshape(labels, [-1, 1])
         return tf.nn.sampled_softmax_loss(w_t, b, labels,logits,num_samples,self.target_vocab_size)
-
-      
       softmax_loss_function = sampled_loss
+      setattr(tf.contrib.rnn.GRUCell, '__deepcopy__', lambda self, _: self)
+      setattr(tf.contrib.rnn.BasicLSTMCell, '__deepcopy__', lambda self, _: self)
+      setattr(tf.contrib.rnn.MultiRNNCell, '__deepcopy__', lambda self, _: self)
+
+
 
     # Create the internal multi-layer cell for our RNN.
     single_cell = tf.contrib.rnn.GRUCell(size)
